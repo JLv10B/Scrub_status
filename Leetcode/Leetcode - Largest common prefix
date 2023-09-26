@@ -1,0 +1,29 @@
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        """ Write a function to find the longest common prefix string amongst an array of strings. If there is no common prefix, return an empty string "".
+        
+        Input: strs = ["dog","racecar","car"]
+        
+        Data structure:
+        
+        strs = 
+        [
+          'dog'
+          ...
+        ]
+        
+        Output: ''
+        
+        """
+        # Sort all words in list alphabetically. This will sort all the words with most largest common prefixes first and words with shortest commmon prefixes last.
+        strs.sort()
+        # Compare the first word and the last word to find common letters and store in variable longest_prefix.
+        longest_prefix = ''
+        first_word = strs[0]
+        last_word = strs[-1]
+        # For each index in length compare that index between the first and the last words to see if they match. If they don't match return longest_prefix, if they do match add that letter to longest_prefix
+        for index in range(min(len(first_word), len(last_word))):
+            if  first_word[index] != last_word[index]:
+                return longest_prefix
+            longest_prefix += first_word[index]
+        return longest_prefix

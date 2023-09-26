@@ -1,0 +1,53 @@
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        """ You are climbing a staircase. It takes n steps to reach the top.
+            Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+            If you write out the first few answers you can see that it's a Fibonacci sequence and can be solved
+            using recursion. Recursion is slow though and ends up with a Time complexity of O(2^n). This can be
+            rectified by using dynamic programming which will make the Time complexity linear.
+
+            Dynamic programming is a way to take a recursive algorithm, finding the overlapping subproblems(repeated)
+            calls and caching them for future calls in order to imprve time complexity. There are 2 types of 
+            dynamic programming, top-down and bottom up. You can also compbine into a half-and-half approach.
+
+            Top-down dynamic programming is typically slower because of the recursion but tends to be more
+            intuitive
+
+            Bottom up dynamic programming is typically faster because you are just filling a table
+
+            ex.
+
+                                                fib(5)
+                                fib(4)                              fib(3)
+                    fib(3)                fib(2)              fib(2)      fib(1)
+                fib(2)    fib(1)     fib(1)  fib(0)       fib(1)  fib(0)
+            fib(1)  fib(0)
+
+            From this example all the right nodes are repeated on the left so you can store the outputs from the
+            left nodes and just recall them when you are calling the repeated function on the right, thereby
+            making the time complexity linear by following down the left branches only.
+        """
+
+        # Bottom-up approach: Faster and more simple
+        if n == 0 or n == 1: # Base case
+            return 1
+        a, b = 1, 1
+        for iterations in range(n-1): # Iterate through the correct number of substeps to find the answer
+            next = a + b 
+            a = b
+            b = next
+        return next
+
+        # Top-down approach:
+        memo = {} # Initiate a dictionary for caching and store base cases
+        memo[0] = 1
+        memo[1] = 1
+        def climb(n): 
+            if n in memo: # First check if n is already in memo
+                return memo[n]
+            else: # If n is not in memo then perform the recursive case and sore the output in memo
+                memo[n] = climb(n-1) + climb(n-2)
+                return memo[n]
+        return climb(n)
+

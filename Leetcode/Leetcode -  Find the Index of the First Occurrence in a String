@@ -1,0 +1,56 @@
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        """ Given two strings needle and haystack, return the index of the first occurrence of needle 
+        in haystack, or -1 if needle is not part of haystack.
+
+        Input: haystack = "sadbutsad", needle = "sad"
+        Output: 0
+        Explanation: "sad" occurs at index 0 and 6. The first occurrence is at index 0, so we return 0.
+
+        Input: haystack = "leetcode", needle = "leeto"
+        Output: -1
+        Explanation: "leeto" did not occur in "leetcode", so we return -1.
+
+        """
+
+        # Approach 1: Brute force method - compare each letter from needle to haystack starting at index 0
+        #   if there isn't a match you start at the next index then continue
+
+        for index_haystack in range(len(haystack)-len(needle)+1): # For every starting position in haystack
+            for index_needle in range(len(needle)): # Compare with each letter in needle and incriment
+                if needle[index_needle] != haystack[index_haystack + index_needle]: # If letters do not match 
+                    break # Move onto the next starting position in haystack by breaking the for loop
+                if index_needle == len(needle): # If the last index_needle completes the for loop
+                    return index_haystack # Return the starting position in haystack
+        return -1
+            
+
+        # Approach 2: Knuth-Morris-Pratt (KMP) algorithm - Building off the brute force method. Instead of moving
+        #   the haystack starting index each time you find a mismatch, if there is a repeated pattern in the needle
+        #   you can move the needle over to the reapeated pattern and compare from there.       
+        
+        lps = [0] * len(needle) # Initialize longest proper prefix which is suffix(LPS), fist element always is 0
+        prevLPS, i = 0, 1 # prevLPS always starts off pointing at needle[0], i is the 2nd pointer
+        while i < len(needle):
+            if needle[i] == needle[prevLPS]: # If the elements match
+                lps[i] = prevLPS + 1 # The lps points to the element next to prevLPS
+                prevLSP += 1 
+                i += 1
+            elif prevLSP == 0: # If there isn't a match and prevLPS is still pointing at 0 then set lps[i] as 0
+                lps[i] = 0
+                i += 1
+            else:
+                prevLPS = lps[prevLPS - 1] # If there isn't a match and prvLPS is not pointing at needle[0] then 
+
+        # Main algorithm
+        n = 0 #needle index
+        for h in range(len(haystack)):
+            while (n > 0 and
+                    needle[n] != haystack[h]):
+                    n = lps[n-1]
+            if needle[n] == haystack[h]:
+                n += 1
+            if n == len(needle):
+                return h - n + 1
+
+        return -1

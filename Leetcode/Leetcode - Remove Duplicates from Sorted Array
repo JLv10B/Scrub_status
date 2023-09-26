@@ -1,0 +1,32 @@
+def removeDuplicates(self, nums: List[int]) -> int:
+    """ Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that 
+    each unique element appears only once. The relative order of the elements should be kept the same. Then 
+    return the number of unique elements in nums.
+    
+    Change the array nums such that the first k elements of nums contain the unique elements in the order 
+    they were present in nums initially. Return k.
+
+    Input: nums = [1,2,3,3,3]
+    Output: k = 3, nums = [1,2,3,3,3]
+
+    Input: nums = [0,0,1,1,2,2,3,3]
+    Output: k= 4, nums = [0,1,2,3,2,2,3,3]
+
+    This is can be broken down into a 2 pointer problem where you have a slow pointer that is locking in the last
+    unique number and a fast pointer that iterates through the list to find the next unique number. Once it finds
+    the next unique number you move the slow pointer and replace that number and continue.
+
+    """
+    # Initiate the slow pointer with base = 0
+    # Iterate through the list using range(1, len(nums))
+    # If numbers are not the same move the slow pointer once and replace that number with the unique number
+    # return base + 1 to include index 0
+    # 
+    # O(N)
+
+    base = 0
+    for index in range(1, len(nums)):
+        if nums[base] != nums[index]:
+            base += 1
+            nums[base] = nums[index]
+    return base + 1
