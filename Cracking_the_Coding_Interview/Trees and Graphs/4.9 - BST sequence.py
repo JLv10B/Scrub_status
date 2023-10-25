@@ -11,150 +11,89 @@ Input:
 Output: [50,20,60,10,55], [50,60,20,10,55], [50,20,60,55,10], [50,60,20,55,10]
 
 Approach:
--We can think of the output as every variation of:
-    [
-    {root},
-    {1st depth in any order},
-    {2nd depth in any order},
-    ...
-    ]
--Need a function which does a breadth first search and creates a list of dictionaries for each depth
--Need a function which utilizes the output from the first function and creates unique lists
+-In order to create a binary serach tree we must input the left and right subtrees/nodes in the appropriate order.
+-Each depth per subtree must maintain relative order but left vs. right does not matter
 
 """
 class Node:
-    def __init__(self, key):
-        self.key = key
-        self.parent = None
+    def __init__(self, data):
+        self.data = data
         self.left = None
         self.right = None
-
 
 class BinarySearchTree:
     def __init__(self):
         self.root = None
 
-    def insert(self, key):
-        new = Node(key)
+    def insert(self, data):
+        new_node = Node(data)
         if self.root is None:
-            self.root = new
+            self.root = new_node
             return
 
-        current = self.root
-        while current:
-            if current.key > key:
-                if current.left is None:
-                    current.left = new
-                    new.parent = current
+        current_node = self.root
+        while current_node:
+            if current_node.data > data:
+                if current_node.left is None:
+                    current_node.left = new_node
                     return
-                current = current.left
-            else:
-                if current.right is None:
-                    current.right = new
-                    new.parent = current
+                else:
+                    current_node = current_node.left
+            if current_node.data < data:
+                if current_node.right is None:
+                    current_node.right = new_node
                     return
-                current = current.right
+                else:
+                    current_node = current_node.right
 
-    def get_node(self, key):
-        current = self.root
-        while current:
-            if current.key == key:
-                return current
-
-            if current.key > key:
-                current = current.left
-            else:
-                current = current.right
-        raise Exception("No such value in the tree")
-    
-def find_bst_sequences(bst):
-    if not bst.root:
+# Function finds all sequences that can be input to create BST
+def find_bst_sequences(tree):
+    # If tree is empty return empty array
+    # If non-empty tree, utilize helper function
+    if tree.root is None:
         return []
-    return helper(bst.root)
-
+    else:
+        return helper(tree.root)
+    
 
 def helper(node):
-    if not node:
+    """ This function utilizes the weave function to create sequences starting at the input node """
+    # If input is an empty node, such as a leaf, return [[]]
+    if node is None:
         return [[]]
-
-    right_sequences = helper(node.right)
-    left_sequences = helper(node.left)
+    
+    # right_subtree goes down the path of the right node
+    # left_subtree goes downt he path of the left node
+    right_subtree = helper(node.right)
+    left_subtree = helper(node.left)
     sequences = []
-    for right in right_sequences:
-        # print(f'Right: {right}, Right_sequence: {right_sequences}')
-        for left in left_sequences:
-            # print(f'Left: {left}, Left_sequence: {left_sequences}')
-            sequences = weave(left, right, [node.key], sequences)
-            # print(f'Node: {node.key}, Sequence: {sequences}')
+
+    # For each different ordering in the right_subtree and left_subtree
+    # Weave together each ordering/sequence behind the input/parent node
+    for right_sequence in right_subtree:
+        for left_sequence in left_subtree:
+            sequences = weave(left_sequence, right_sequence, [node.data], sequences)
     return sequences
 
-
-def weave(first, second, prefix, results):
-    # print(f'First array: {first}, Second array:{second}')
-    if len(first) == 0 or len(second) == 0:
-        
-        result = prefix.copy()
-        # result = prefix
-        print(f'result: {result}')
-        result.extend(first)
-        result.extend(second)
-        results.append(result)
-        # print(f'Base case: {results}')
-        return results
-
-    head = first[0]
-    # print(f'Head of first: {head}')
-    prefix.append(head)
-    # print(f'Prefix after append head: {prefix}')
-    results = weave(first[1:], second, prefix, results)
-    # print(f'First recursion complete: {results}')
+def weave(left_sequence, right_sequence, prefix, sequences):
+    """This function takes the left and right sequences and weave it together beind the prefix and save it in sequences"""
+    # If left_sequence or right_sequence is empty then add the non-empty sequence to the prefix
+    if len(left_sequence) == 0 or len(right_sequence) == 0:
+        result = prefix.copy() # This must be a .copy() in order to not modify the prefix for later
+        result.extend(left_sequence)
+        result.extend(right_sequence)
+        sequences.append(result)
+        return sequences
+    
+    prefix.append(left_sequence[0])
+    sequences = weave(left_sequence[1:], right_sequence, prefix, sequences)
     prefix.pop()
-    # print(f'Prefix after pop: {prefix}')
-    head = second[0]
-    # print(f'Head of second: {head}')
-    prefix.append(head)
-    results = weave(first, second[1:], prefix, results)
+    prefix.append(right_sequence[0])
+    sequences = weave(left_sequence, right_sequence[1:], prefix, sequences)
     prefix.pop()
-    return results
+    return sequences
 
-
-def find_bst_sequences_backtracking(bst):
-    if not bst.root:
-        return []
-
-    ret_backtracking = []
-
-    def backtracking(choices, weave):
-        if not len(choices):
-            ret_backtracking.append(weave)
-            return
-
-        for i in range(len(choices)):
-            nextchoices = choices[:i] + choices[i + 1 :]
-            if choices[i].left:
-                nextchoices += [choices[i].left]
-            if choices[i].right:
-                nextchoices += [choices[i].right]
-            backtracking(nextchoices, weave + [choices[i].key])
-
-    backtracking([bst.root], [])
-    return ret_backtracking
-
-
-testable_functions = [find_bst_sequences, find_bst_sequences_backtracking]
-
-
-def test_find_bst_sequences():
-    for find_bst in testable_functions:
-        bst = BinarySearchTree()
-        bst.insert(2)
-        bst.insert(1)
-        bst.insert(3)
-        sequences = find_bst(bst)
-        assert [2, 1, 3] in sequences
-        assert [2, 3, 1] in sequences
-        assert len(sequences) == 2
-
+# Testing:
 
 def example():
     bst = BinarySearchTree()
@@ -168,10 +107,6 @@ def example():
 
     sequences = find_bst_sequences(bst)
     print(sequences)
-
-    sequences = find_bst_sequences_backtracking(bst)
-    print(sequences)
-
 
 if __name__ == "__main__":
     example()
