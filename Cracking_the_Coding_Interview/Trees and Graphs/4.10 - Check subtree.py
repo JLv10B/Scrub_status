@@ -12,29 +12,57 @@ which may hide differences between subtrees
 -If you take T1 and turn it into a substring and take substring T2 and compare it it may be faster but much larger in terms of memory capacity
 -In order to accomplish the first approach we much have a function that searches through a tree for a specific node.
 -Whenever that node is found it runs another function that searches through that subtree comparing it to T2
--If the T1 subtree does not match with T2 then continue to search T1 but skip the nodes that have been processed already
--Another thing to consider is whether it's better to preprocess T2 vs process it at the same time as the subtree in T1
--
-
-
 """
 class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
 
-class BinaryTree:
+    def __str__(self) -> str:
+        return f'{self.data}'
+
 
 def check_subtree(tree1, tree2):
-    """ Searches tree1 for tree2.root, searches should be done by BFS """
-    # If tree2.root is found, run compare function
+    """Checks tree1 for tree2.root, if tree2.root is found then compare subtrees"""
+    print(tree1, tree2)
+    if not tree1 and not tree2:
+        return True
+    elif not tree1 or not tree2:
+        return False
+    elif tree1.data == tree2.data and compare_subtrees(tree1, tree2):
+        return True
+    else:
+        return check_subtree(tree1.left, tree2) or check_subtree(tree1.right, tree2)
 
 
-def process_tree(tree2):
-    """ Processes tree to create an array """
+def compare_subtrees(haystack_node, needle_node):
+    """Compares haystack node to needle node.root."""
+    print('Comparing subtrees')
+    print(haystack_node, needle_node)
+    # If both nodes are none then we are at the end of each tree
+    if haystack_node is None and needle_node is None:
+        return True
+    elif haystack_node is None or needle_node is None:
+        return False
+    elif haystack_node.data != needle_node.data:
+        return False
+    # If both nodes.data match then recurse for left and right nodes
+    else:
+        return compare_subtrees(haystack_node.left, needle_node.left) and compare_subtrees(haystack_node.right, needle_node.right)
 
 
-def compare_subtrees(node, visited):
-    """Compare subtree (starting at node as root) to processed tree2. Output should include visited in order to not search through the same nodes again if subtrees do not match
-    Input: node, [visited]
-    Output: Boolean, [visited]
-    """
+# Testing:
 
+tree1 = Node(1)
+tree1.left = Node(2)
+tree1.right = Node(3)
+tree1.left.left = Node(4)
+tree1.right.right = Node(5)
+
+tree2 = Node(2)
+tree2.left = Node(4)
+
+if __name__ == "__main__":
+    print(check_subtree(tree1, tree2))
 
