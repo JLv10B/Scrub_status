@@ -24,13 +24,13 @@ def magic_index_recursive(array, start, end):
     if mid == array[mid]:
         return print(array[mid])
     elif mid > array[mid]:
-        magic_index_recursive(array, mid, end)
+        return magic_index_recursive(array, mid+1, end)
     else:
-        magic_index_recursive(array, start, mid)
+        return magic_index_recursive(array, start, mid-1)
 
 # Testing:
 if __name__ == "__main__":
-    a = [-40,-10,0,1,8,9,15,27,48,59,50]
-    # magic_index_recursive(a, 0, len(a)-1)
+    a = [-40,-10,0,1,4,8,9,15,27,48,59,50]
+    magic_index_recursive(a, 0, len(a)-1)
     magic_index_iterative(a)
 
