@@ -3,6 +3,9 @@ class Node:
         self.data = data
         self.next = None
 
+    # def __str__(self) -> str:
+    #     return (f'{self.data}')
+
 class LinkedList:
     def __init__(self):
         self.head = None
