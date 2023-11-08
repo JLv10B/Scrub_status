@@ -37,46 +37,32 @@ Approach:
 def robot_in_grid(matrix):
     if not matrix:
         return None
-    bottom = len(matrix)-1
-    right_border = len(matrix[0])-1
-    path_list = [[(0,0)]]
-    if robot_movement(matrix, path_list):
+    rows = len(matrix)-1
+    columns = len(matrix[0])-1
+    path_list = []
+    failed_points = set()
+    if robot_movement(matrix, rows, columns, path_list, failed_points):
         return print(f'Robot path through the matrix: {path_list}')
-    else:
-        return print(f'Path list: {path_list}')
+    return None
 
-def robot_movement(matrix, path_list):
-    print(f'Path list: {path_list}')
-    bottom = len(matrix)-1
-    right_border = len(matrix[0])-1
-    path = path_list.pop(0)
-    print(f'Path: {path}')
-    row = path[-1][0]
-    column = path[-1][1]
+def robot_movement(matrix, row, column, path_list, failed_points):
     # Base case is if coordinate is out of bounds or hits a dead end we terminate that path
-    if (row + 1) > bottom or matrix[row+1][column] == 1:
-        # print(f'base 1 false {row + 1} > {bottom} or {matrix[row+1][column]} = 1')
-        if (column + 1) > right_border or matrix[row][column+1] == 1:
-            # print(f'base 2 false {column + 1} > {right_border} or {matrix[row][column+1]} = 1')
-            return False
-        else:
-            new_path = path.copy()
-            new_path.append((row, column+1))
-            path_list.append(new_path)
-            print(path_list)
-            print(f'Path_list after right check: {path_list}')
-            robot_movement(matrix, path_list)
-            return True
-    # Checks path downwards
-    elif matrix[row+1][column] == 0:
-        new_path = path.copy()
-        new_path.append((row+1, column))
-        path_list.append(new_path)
-        print(path_list)
-        print(f'Path_list after down check: {path_list}')
-        robot_movement(matrix, path_list)
+    if row < 0 or column < 0 or matrix[row][column] == 1:
+        return False
+    
+    coord = (row, column)
+
+    if coord in failed_points:
+        return False
+    
+    if(((row == 0) and (column == 0))
+       or robot_movement(matrix, row, column-1, path_list, failed_points) 
+       or robot_movement(matrix, row-1, column, path_list, failed_points)):
+        path_list.append(coord)
         return True
-    # return False
+    
+    failed_points.add(coord)
+    return False
 
 
 
