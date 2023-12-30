@@ -64,7 +64,35 @@ def robot_movement(matrix, row, column, path_list, failed_points):
     failed_points.add(coord)
     return False
 
+def robot(matrix):
+    rows, columns = len(matrix), len(matrix[0])
+    path = []
 
+    def dfs(row, col):
+        """
+        This function should traverse the matrix and return False if coord is out of bounds or off limits
+        Return True and add coord to path if in bounds
+        """
+        if (row == rows-1) and (col == columns-1):
+            path.append((row,col))
+            return True
+        
+        if (row > rows-1 or
+            col > columns-1 or
+            matrix[row][col] == 1):
+            return False
+
+        res = (dfs(row+1, col) or
+               dfs(row, col+1))
+        
+        if res == True:
+            path.append((row,col))
+            return res
+        
+    if dfs(0,0):
+      path.reverse()
+      return print(f'Robot path through the matrix: {path}')
+    return print('No path available')
 
 # Testing:
 if __name__ == "__main__":
@@ -75,3 +103,4 @@ if __name__ == "__main__":
               [1,0,0,0,1,0],
               [0,1,0,0,1,0]]
     robot_in_grid(matrix)
+    robot(matrix)

@@ -21,7 +21,9 @@ class Solution:
         if list1 == None or list2 == None:
             return list1 or list2
         
-        # Compare the node value from list1 and list2, if list1.val is less than or equal to list2.val then use list1.val as the listnode. Recursively go through the function to fine list1.next or list2.next.
+        # Compare the node value from list1 and list2, if list1.val is less than or equal to 
+        # list2.val then use list1.val as the listnode. Recursively go through the function to 
+        # find list1.next or list2.next.
         
         if list1.val <= list2.val:
             list1.next = self.mergeTwoLists(list1.next, list2)

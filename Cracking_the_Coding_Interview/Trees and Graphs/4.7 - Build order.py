@@ -44,12 +44,11 @@ class Graph:
         # print('node:', node)
         # print('Visited:', visited)
 
-        for list in self.graph[node]:
-            for adjacent in list:
-                if adjacent not in visited:
-                    self.topolgicalSortUtil(adjacent, visited, stack)
-                elif adjacent in visited and adjacent not in stack:
-                    return ValueError
+        for adjacent in self.graph[node]:
+            if adjacent not in visited:
+                self.topolgicalSortUtil(adjacent, visited, stack)
+            elif adjacent in visited and adjacent not in stack:
+                return ValueError
                     
         stack.append(node)
         # print('Stack:', stack)
@@ -75,15 +74,15 @@ class Graph:
             return stack
     
 # Testing
-# nodes = ['a','b','c','d','e','f']
-# dependencies = [['a', 'd'], ['f', 'b'], ['b', 'd'], ['f', 'a'], ['d', 'c']]
+nodes = ['a','b','c','d','e','f']
+dependencies = [['a', 'd'], ['f', 'b'], ['b', 'd'], ['f', 'a'], ['d', 'c']]
 
-# g = Graph(nodes, dependencies)
-# g.createGraph(nodes)
-# g.addEdge(dependencies)
+g = Graph(nodes, dependencies)
+g.createGraph(nodes)
+g.addEdge(dependencies)
  
-# print ("Following is a Topological Sort of the given graph")
-# print(g.topologicalSort())
+print ("Following is a Topological Sort of the given graph")
+print(g.topologicalSort())
 
 
 
@@ -131,8 +130,8 @@ def build_order(projects, dependencies):
     return build_order
     
 # Testing:
-projects = ["A", "B", "C", "D", "E", "F", "G"]
-dependencies = [("C", "A"), ("B", "A"), ("F", "A"), ("F", "B"), ("F", "C"),
-        ("A", "E"), ("B", "E"), ("D", "G")]
+# projects = ["A", "B", "C", "D", "E", "F", "G"]
+# dependencies = [("C", "A"), ("B", "A"), ("F", "A"), ("F", "B"), ("F", "C"),
+#         ("A", "E"), ("B", "E"), ("D", "G")]
 
-print(build_order(projects, dependencies))
+# print(build_order(projects, dependencies))
