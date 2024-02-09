@@ -9,7 +9,7 @@ Given:
 -matrix r x c
     -certain cells are off limits/blocked
 -robot
-    -can only move rigth and down
+    -can only move right and down
 
 matrix:
 [[0,0,0,0,1,0],

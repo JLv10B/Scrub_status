@@ -80,7 +80,7 @@ dependencies = [['a', 'd'], ['f', 'b'], ['b', 'd'], ['f', 'a'], ['d', 'c']]
 g = Graph(nodes, dependencies)
 g.createGraph(nodes)
 g.addEdge(dependencies)
- 
+
 print ("Following is a Topological Sort of the given graph")
 print(g.topologicalSort())
 

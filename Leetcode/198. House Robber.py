@@ -22,38 +22,32 @@ Output: 550, max amount of money you can rob
 """
 def house_robber(array):
     """
-    Input:
-    array = [
-                10,
-                500,
-                100,
-                50,
-                ...
-            ]
+    -Given array of numbers we can use recursion to find the max sum at each index within the given
+    restrictions
 
-    Output:
-    sums = [
-            10,
-            500,
-            110,
-            550,
-            ...    
-            ]
-    max_money = 550
-    
-
+    [1,2,3,4,5]
     """
-    memo = {}
-    def helper(i):
-        if i >= len(array):
-            return 0
-        res = max(array[i] + helper(i+2), helper(i+1))
-        if i not in memo:
-            memo[i] = res
-        return res
-    return helper(0)
+    # If length of array is <=2 then return the max, covers 0,1,2
+    if len(array) == 0:
+        return 0
+    elif len(array) <= 2:
+        return max(array)
+    
+    # Find the max sum
+    return max_sum(array, 0)
+
+def max_sum(array, i):
+    # Base case: if index is > len(array)-1 then all houses are accounted for
+    if i > len(array)-1:
+        return 0
+    
+    # Recursive case: which is greater, the current house + the max_sum at the skip house or the max_sum
+    # at the next house
+    return max(array[i]+max_sum(array, i+2), max_sum(array, i+1))
+    
 
 # Testing:
 if __name__ == "__main__":
-    array = [10,500,100,50]
+    array = [10,500,100,50,10,15,80]
+    # array = []
     print(house_robber(array))
