@@ -56,16 +56,12 @@ def count_islands(grid):
             elif (row, col) not in visited and grid[row][col] == '1':
                 find_island_borders(grid, row, col, visited)
                 count += 1
-                print(visited, count)
     
     return count
 
 def find_island_borders(grid, row, col, visited):
     # Basecase: out of bounds or already been visited
-    if row < 0 or row >= len(grid) or col < 0 or col >= len(grid[0]):
-        return 
-    
-    elif (row,col) in visited:
+    if row < 0 or row >= len(grid) or col < 0 or col >= len(grid[0]) or ((row,col) in visited):
         return
     
     visited.add((row,col))
@@ -83,9 +79,9 @@ def find_island_borders(grid, row, col, visited):
 # Testing:
 if __name__ == "__main__":
     grid = [
-  ["1","1","1","1","0"],
-  ["1","1","0","1","0"],
   ["1","1","0","0","0"],
-  ["0","0","0","0","0"]
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
 ]
     print(count_islands(grid))
