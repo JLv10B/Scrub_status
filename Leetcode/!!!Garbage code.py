@@ -1,62 +1,34 @@
 """
-Datastructures:
-Lists
-Dictionary
-Tuple
-Set
-Linked List
-Tree
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the maximum amount of water a container can store.
+
+reqs:
+-return max water
+
+- start at the 2 end points to calculate max water
+- move the smaller wall towards the other wall
+- if the walls overlap or cross then return max water
+
+time:O(n)
+space:O(n)
+
 """
-# def create_list(array):
-#     result_big = [x for x in array if x > 5]
-#     print(f'result_big list comprehension  = {result_big}')
-#     result_small = [x*2 for x in array if x < 5]
-#     print(f'result_small list comprehension = {result_small}')
-    
-#     for i in result_big:
-#         result_big.append(i+1)
-#     print(f'result_big append = {result_big}')
+def find_max_water(height):
+    max_water = 0
 
-#     result_big.extend(result_small)
-#     print(f'result_big extend = {result_big}')
-#     print(f'result_small= {result_small}')
+    left = 0
+    right = len(height)-1
 
-#     return result_big, result_small
+    while left < right:
+        current_water = min(height[left], height[right]) * abs(right-left)
+        max_water = max(current_water, max_water)
 
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -=1
 
-# def create_dict(array1, array2):
-#     new_dict = {key:value for (key,value) in zip(array1, array2)}
-#     print(f'new dictionary with comprehension = {new_dict}')
-
-#     for key, value in new_dict.items():
-#         if key % 2 == 0:
-#             del new_dict[key]
-def container_function(n):
-    memo = {}
-    return fibonacci_recursive(n, memo)
-    
-def fibonacci_recursive(n, memo):
-    print("Calculating F", "(", n, ")", sep="", end=", ")
-
-    # Base case
-    if n == 0:
-        print(0)
-        return 0
-    elif n == 1:
-        print(1)
-        return 1
-    elif n in memo:
-        return memo[n]
-
-    # Recursive case
-    else:
-        memo[n] = fibonacci_recursive(n-1, memo) + fibonacci_recursive(n-2, memo)
-        return memo[n]
-
-        
-# Testing:
-if __name__ == "__main__":
-    # array = [1,2,3,4,5,6,7,8,9,0,12,14,15,16,17,128]
-    # create_list(array)
-    # create_dict(result_big, result_small)
-    container_function(5)
+    return max_water
