@@ -10,86 +10,93 @@ Output: [7,0,8]
 
 Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
 Output: [8,9,9,9,0,0,0,1]
-
-Notes:
--start at the head of each list
--as long as neither of the nodes is none add them
--If sum > 9 then use % 10 to get the single digit and add that as a node in the resultant linked list
--Because there is a loop we can use a helper function to perform this task
--If one of the nodes is None, if there is a remainder then add that to the other node and input that into the
-result linked list
--If there is no remainder then input the remaining nodes into the resultant linked list
 """
+
+def add_two_linked_lists(l1_head, l2_head):
+    """
+    This function adds 2 numbers and returns the sum as a linked list. 
+    
+    This function accepts 2 linked lists representing 2 non-negative integers who's digits are stored in reverse order, each node contains a single digit. Neither input can contain any leading zeros except the number 0 itself.
+
+    Approach:
+    - The head of each linked list is the single's place. Therefore if the sum of 2 nodes is > 9 then the 1 can be carried over to the next nodes.
+    - Initialize linked_list_sum = Linkedlist(), carry_over = 0, l1_node = l1_head, l2_node = l2_head
+    - Continue to loop through l1 and l2 nodes until you reach the tail for both and there is no carry_over to add
+        - If l1_node is None then set l1_node_val to 0 and l1_node = None, else l1_node_val = l1_node.val, l1_node = l1_node.next
+        - Repeat for l2_node
+        - Add l1_node_val, l2_node_val, and carry_over to get new_node
+        - If new_node is > 9: carry_over = 1, new_node-= 10, linked_list_sum.add_node(new_node)
+        - Else carry_over = 0, linked_list_sum.add_node(new_node)
+    
+    """
+    linked_list_sum = Linkedlist()
+    carry_over = 0
+    l1_node, l2_node = l1_head, l2_head
+
+    while l1_node != None or l2_node != None or carry_over != 0:
+        if l1_node == None:
+            l1_node_val = 0
+            l1_node = None
+        else: 
+            l1_node_val = l1_node.val
+            l1_node = l1_node.next
+
+        if l2_node == None:
+            l2_node_val = 0
+            l2_node = None
+        else: 
+            l2_node_val = l2_node.val
+            l2_node = l2_node.next
+
+        new_node = l1_node_val + l2_node_val + carry_over
+
+        if new_node > 9:
+            carry_over = 1
+            new_node -= 10
+        else:
+            carry_over = 0
+        linked_list_sum.add_node(new_node)
+
+    return linked_list_sum.print_llist()
+
 class Node:
-    def __init__(self, data, next=None):
-        self.data = data
+    def __init__(self, val, next=None):
+        self.val = val
         self.next = next
 
 class Linkedlist:
+    """
+    Methods:
+    --------
+    add_node - adds a node as the head if self.head == None or to the end of the linked list
+    print_llist - prints linked list
+    """
+
     def __init__(self):
         self.head = None
 
-    def add_node(self, data):
-        new_node = Node(data)
+    def add_node(self, val):
+        new_node = Node(val)
         if self.head == None:
             self.head = new_node
             return
         
         current_node = self.head
-        while current_node.next:
+        while current_node.next != None:
             current_node = current_node.next
 
         current_node.next = new_node
 
     def print_llist(self):
         if self.head == None:
-            return print('No Nodes')
+            return None
         
         current_node = self.head
-        while current_node:
-            print(current_node.data)
+        while current_node != None:
+            print(current_node.val)
             current_node = current_node.next
 
-def add_two(num1, num2): 
-    digits = []
-    answer = Linkedlist()
-    helper(num1.head, num2.head, digits, 0)
-
-    for digit in digits:
-        answer.add_node(digit)
-    return answer.print_llist()
-    
-    
-def helper(num1, num2, digits, remainder):
-    # Adds the values of 2 nodes and saves the singles digit in [digits] and the tens digit in remainder
-    if (num1 is None) and (num2 is None):
-        if remainder > 0:
-            digits.append(remainder)
-        return digits
-
-    # Sums non-None nodes to remainder
-    new_digit = remainder    
-    if num1:
-        new_digit += num1.data
-        num1 = num1.next
-    if num2:
-        new_digit += num2.data
-        num2 = num2.next
-
-    # If new_digit > 9 then set remainder to 1 and last_digit to new_digit % 10
-    # if new_digit <= 9 then append to digits
-    if new_digit > 9:
-        last_digit = new_digit % 10
-        remainder = 1
-        digits.append(last_digit)
-    else:
-        remainder = 0
-        digits.append(new_digit)
-
-    helper(num1, num2, digits, remainder)
-
-# Testing:
-
+# Testing
 if __name__ == "__main__":
     num1 = Linkedlist()
     num2 = Linkedlist()
@@ -105,6 +112,4 @@ if __name__ == "__main__":
     num2.add_node(9)
     num2.add_node(9)
     # num1.print_llist()
-    # num2.print_llist()
-    add_two(num1, num2)
-    
+    add_two_linked_lists(num1.head, num2.head)

@@ -11,28 +11,52 @@ Input Data set:
 	]
 Output: infinite degrees of separation, priority is speed
 
-Req:
-- We're given all the connections individually as they are created so we can preprocess this data and store into 
-a dataset in order to be able to retreive the desired output as quickly as we can
-- Return a dataset with full social network of given user
+Social network retrieval
+
+This script creates a dictionary that stores full social networks and allows retrieval of the social network
+in O(1) time.
+
+Functions:
+----------
+create_social_network_dict - returns social_network_dict
+find_update_root - helper function to find and update roots in social_network_dict
+retrieve_social_network - retrieves social network for given user
+
+
+Input = [(1,2),
+         (1,3),
+         (1,4),
+         ...]
 
 Dataset:
-connections = {user: [host_user], 
-               host_user: [user2, user3, user4, ...],
+user_network = {user: [host_user, (connections)], 
+               1:[1,(2,3)],
+               2:[1,()],
+               3:[1,()],
                ...}
 
 Approach:
+- always merge to the left
+- always merge into the final root
+- determine root during runtime rather than pre-processing*
 
-def Create_network(array):
-- Initialize connections = {}, host_user1 = None, host_user2 = None
+def Create_network(user_connection_data):
+- Input = [(1,2),
+           (1,3),
+           (1,4),
+           ...]
 
-- If user1 in connections then determine host_user1
-    - If len(connections[user1]) = 1 then connections[user1][0] is a potential host
-        - potential_host = connections[user1][0]
-        - Loop through each level until potential_host has > 1 connection or we loop back to user1
-        - host_user1 = potential_host
-    - Else: host_user1 = user1
-- Repeat for user2 and host_user2
+- Output ={1:[1,(2,3)],
+           2:[1,()],
+           3:[1,()],
+           ...}
+
+
+- Initialize user_network = {}
+
+- Iterate through user_connection_data 
+    - 
+    - If either user is not in user_network then intialize user:[root_user,(connections)]
 
 - Case #1: both users are already connected
     -continue
@@ -70,29 +94,29 @@ def find_network(user, connections):
     
 - Return result
 """
-def create_network(array):
-    connections = {}
+def create_social_network_dict(user_connection_data):
+    """
+    This function creates social_network_dict which stores the social network for all users.
 
-    for (user1, user2) in array:
+    Parameters:
+    -----------
+    user_connection_data = [(1,2),
+                            (2,3),
+                            (3,4),
+                            ...]
+
+    Returns:
+    --------
+    social_network_dict = {1:[1,(2,3,4)],
+                           2:[1,()],
+                           3:[1,()],
+                           4:[3,()],
+                           ...}
+    """
+    social_network_dict = {}
+
+    for (user1, user2) in user_connection_data:
         host_user1, host_user2 = None, None
-
-        if user1 in connections:
-            if len(connections[user1]) == 1: 
-                potential_host = connections[user1][0]
-                while len(connections[potential_host]) == 1 and connections[potential_host][0] != user1: 
-                    potential_host = connections[potential_host][0]
-                host_user1 = potential_host
-            else:
-                host_user1 = user1
-
-        if user2 in connections:
-            if len(connections[user2]) == 1: 
-                potential_host = connections[user2][0]
-                while len(connections[potential_host]) == 1 and connections[potential_host][0] != user2: 
-                    potential_host = connections[potential_host][0] 
-                host_user2 = potential_host
-            else:
-                host_user2 = user2
 
         # print(f'host_user1 = {host_user1}, host_user2 = {host_user2}')
         
@@ -100,31 +124,34 @@ def create_network(array):
             continue
         
         elif host_user1 == None and host_user2 == None:
-            connections[user1] = [user2]
-            connections[user2] = [user1]
+            social_network_dict[user1] = [user2]
+            social_network_dict[user2] = [user1]
 
         elif host_user1 != None and host_user2 != None:
-            if len(connections[host_user1]) > len(connections[host_user2]):
+            if len(social_network_dict[host_user1]) > len(social_network_dict[host_user2]):
                 primary = host_user1
                 secondary = host_user2
             else:
                 primary = host_user2
                 secondary = host_user1
-            connections[primary].append(secondary)
-            connections[primary].extend(connections[secondary])
-            connections[secondary] = [primary]
+            social_network_dict[primary].append(secondary)
+            social_network_dict[primary].extend(social_network_dict[secondary])
+            social_network_dict[secondary] = [primary]
 
         elif host_user1 == None:
-            connections[host_user2].append(user1)
-            connections[user1] = [user2]
+            social_network_dict[host_user2].append(user1)
+            social_network_dict[user1] = [user2]
 
         elif host_user2 == None:
-            connections[host_user1].append(user2)
-            connections[user2] = [user1]
+            social_network_dict[host_user1].append(user2)
+            social_network_dict[user2] = [user1]
     
-    return connections
+    return social_network_dict
 
-def find_network(user, connections):
+def find_update_root():
+    pass
+
+def retrieve_social_network(user, connections):
     result = set()
 
     if user in connections:
@@ -146,4 +173,3 @@ if __name__ == "__main__":
     network = create_network(array)
     print(network)
     print(find_network(7,network))
-
