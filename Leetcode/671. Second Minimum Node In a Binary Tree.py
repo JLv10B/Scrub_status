@@ -7,3 +7,4 @@ Given such a binary tree, you need to output the second minimum value in the set
 
 If no such second minimum value exists, output -1 instead.
 """
+
