@@ -34,15 +34,13 @@ coord_set = []
 
 """
 def validate_sudoku(board):
-    coord_check = set()
+    coord_check = []
 
     for row in range(9):
         for col in range(9):
             val = board[row][col]
             if val != ".":
-                coord_check.add((row, val))
-                coord_check.add((val, col))
-                coord_check.add((row//3, col//3, val))
+                coord_check.append([(row, val), (val, col), (row//3, col//3, val)]) # row and col are int, val is a str
     return len(coord_check) == len(set(coord_check))
 
 # Testing:
