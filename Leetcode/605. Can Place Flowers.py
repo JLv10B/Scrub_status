@@ -32,6 +32,9 @@ def can_place_flowers(flowerbed, n):
     current_element = 0
     next_element = 0
 
+    if n == 0:
+        return True
+
     while current_element <= len(flowerbed)-1:
         if flowerbed[current_element] == 1:
             current_element += 2
@@ -49,6 +52,6 @@ def can_place_flowers(flowerbed, n):
 
 # Testing:
 if __name__ == "__main__":
-    flowerbed = [1,0,0,0,1]
-    n = 1
+    flowerbed = [1]
+    n = 0
     print(can_place_flowers(flowerbed, n))
