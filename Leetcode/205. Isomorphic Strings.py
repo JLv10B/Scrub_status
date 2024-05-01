@@ -19,12 +19,12 @@ Input: s = "paper", t = "title"
 Output: true
 
 Req:
-- All occurances of a char must be replaces
-- No 2 char may map to the same char
+- All occurances of a char must be replaced
+- No 2 char may map to the same index
 
 Approach:
 - Initialize map_s and map_t as empty lists
-- Iterate through s and map_s.append() the first index of each letter
+- Iterate through s and map_s.append() the first occurance of each letter
 - Repeat for t
 - If map_s == map_t return true, else return false
 
@@ -48,5 +48,5 @@ def iso_strings(s,t):
 # Testing:
 if __name__ == "__main__":
     s = "foo"
-    t = "bar"
+    t = "baa"
     print(iso_strings(s,t))
