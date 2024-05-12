@@ -21,6 +21,7 @@ Approach:
 -Initiate counter and dict
 -Store b,a,l,o,n in dict
 -Find how many iterations of balloon are stored in dict
+    -divide l and o by 2 because you need double to form balloon
 """
 
 def max_number_balloon(text):
@@ -30,14 +31,12 @@ def max_number_balloon(text):
         if letter in letter_dict:
             letter_dict[letter] +=1
 
-    balloon_count = letter_dict['b']
+    letter_dict['l']//2
+    letter_dict['o']//2
 
-    for letter in letter_dict:
-        if letter == 'l' or letter == 'o':
-                balloon_count = min(letter_dict[letter]//2, balloon_count)
-        else:
-            balloon_count = min(letter_dict[letter], balloon_count)
+    return min(letter_dict.values())
 
-
-
-    return balloon_count
+# Testing:
+if __name__ == "__main__":
+    text = "nlaebolkoballoon"
+    print(max_number_balloon(text))
